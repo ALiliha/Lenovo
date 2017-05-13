@@ -4,8 +4,9 @@ $(function() {
 		url: "json/goods.json",
 		success: function(res) {
 			$.each(res, function(i, product) {
+				$('.message').attr('id', res[i].id)
 				//console.log(i,product)
-				$('#details').html('<p><span>首页</span>&gt;<span>商品详情</span>&gt;<b>' + res[i].name + '</b></p>');
+				$('#details').html('<p><span>首页</span>&gt;<span>商品详情</span>&gt;<b>' + res[i].name + ',' + res[i].id + '</b></p>');
 				var a1 = "";
 				$.each(product.img, function(j, img) {
 					//	console.log(img)
@@ -31,7 +32,7 @@ $(function() {
 				var a3 = "";
 				$.each(product.serve, function(k, type) {
 					//	console.log(type)
-					a3 += '	<li><i class="bg_05 officer1"></i>' + type.sev + '</li>';
+					a3 += '	<li><i class="bg_05 officer1"></i><span>' + type.sev + '</span></li>';
 				});
 				$('.serve ul').html(a3);
 				var a4 = "";
@@ -46,49 +47,71 @@ $(function() {
 				$.each(product.banner, function(j, banner) {
 					//console.log(banner)
 					a5 += '<li><img src="img/' + banner.imgurl + '" /></li>';
-			//console.log(a5)
+					//console.log(a5)
 				});
 				$('.more-r .banner').html(a5);
 			});
 			$('.model ul li').click(function() {
-				
+
 				$(this).addClass('active').siblings().removeClass('active');
 			})
 			$('.serve ul li').click(function() {
-			
+
 				$(this).addClass('active').siblings().removeClass('active');
 			})
 			//console.log($('.little ul li'))
 			$('.big li').eq(0).addClass('active');
-			$('.little ul li').click(function(){
+			$('.little ul li').click(function() {
 				$(this).addClass('active').siblings().removeClass('active');
 				$('.big li').eq($(this).index()).addClass('active').siblings().removeClass('active');
 				//console.log($('.big li').eq($(this).index()))
-			})
-			
-	addAmount();	
-	console.log($(".num span"))
-	console.log( $("#add"))
-	console.log($(".num span").val())
-	function addAmount(){
-    $("#add").click(function(){
-        var val = $(".num .val").val();
-        // console.log(val);
-        $(".num .val").val(++val);
-    })
-    $("#sub").click(function(){
-        var val = $(".num .val").val();
-        // console.log(val);
-        if(val>1){
-            $(".num .val").val(--val);
-        }
-    })
-}
 
+			})
+			$('#bug').click(function() {
+				var id = $('.message').attr('id');
+				//console.log( $('.message').attr('id'))
+				var name = $('.message-t h3').html();
+				var intro = $('.message-t span').html();
+				var img = $('.big .active img').attr('src');
+				var kind = $('.model ul .active').html();
+				var serve = $('.serve ul .active span').html();
+				var price = $('.pric').html();
+				console.log(price);
+				var num = $('.val').val();
+				// console.log(img)
+				var arr = [{ id: id, price: price, num: num, name: name, intro: intro, kind: kind, serve: serve, imgurl: img }];
+				$.cookie("goods", JSON.stringify(arr));
+
+				$('#bug').attr('href', 'shoppingCar.html');
+
+			})
+			var arr = $.cookie('goods');
+
+			if(arr) {
+				var sc_arr = JSON.parse(arr);
+				$('.last b').html(sc_arr[0].num)
+				
+			}
+
+			addAmount();
+
+			function addAmount() {
+				$("#add").click(function() {
+					var val = $(".num .val").val();
+					// console.log(val);
+					$(".num .val").val(++val);
+				})
+				$("#sub").click(function() {
+					var val = $(".num .val").val();
+					// console.log(val);
+					if(val > 1) {
+						$(".num .val").val(--val);
+					}
+				})
+			}
 
 		}
 	});
-	
 
 	$(".social").hover(function() {
 		$(".social .contact").css("display", "block")
@@ -123,8 +146,5 @@ $(function() {
 		$(this).find('.child').css('display', 'none');
 
 	})
-	
-	
-	
-	
+
 })

@@ -1,4 +1,11 @@
 $(function() {
+	var arr = $.cookie('goods');
+
+			if(arr) {
+				var sc_arr = JSON.parse(arr);
+				$('.last b').html(sc_arr[0].num)
+				
+			}
 	// ========================头部显示隐藏=========== ==========
 	$(".social").hover(function() {
 		$(".social .contact").css("display", "block")
